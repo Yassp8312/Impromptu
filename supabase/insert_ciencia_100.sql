@@ -1,0 +1,131 @@
+-- Insertar 100 temas de Ciencia de forma segura
+DO $$
+DECLARE
+  ciencia_category_id UUID;
+BEGIN
+  -- Obtener el ID de la categoría Ciencia
+  SELECT id INTO ciencia_category_id FROM categories WHERE name = 'Ciencia';
+  
+  IF ciencia_category_id IS NULL THEN
+    RAISE EXCEPTION 'La categoría Ciencia no existe. Ejecuta primero create_categories_only.sql';
+  END IF;
+  
+  -- Insertar los 100 temas de Ciencia
+  INSERT INTO topics (title, category_id, mode) 
+  SELECT 
+    unnest(ARRAY[
+      'Explica: ¿Por qué la teoría de la evolución de Darwin cambió nuestra visión del ser humano?',
+      '¿Fue el descubrimiento del fuego el primer gran salto tecnológico de la humanidad?',
+      'Explica: Cómo Galileo cambió nuestra manera de observar el universo.',
+      '¿Por qué el descubrimiento de la penicilina transformó la medicina?',
+      'Explica: La revolución que supuso descubrir la estructura del ADN.',
+      '¿Qué descubrimiento científico ha cambiado más la historia de la humanidad?',
+      'Explica: Por qué la teoría de la relatividad de Einstein fue revolucionaria.',
+      '¿Fue la llegada a la Luna principalmente un logro científico o político?',
+      'Explica: Cómo la electricidad cambió la civilización.',
+      '¿Cuál podría ser el próximo descubrimiento científico capaz de cambiar el mundo?',
+      'Explica: ¿Qué significa realmente que el universo está en expansión?',
+      '¿Estamos solos en el universo?',
+      'Explica: Qué ocurre cuando una estrella se convierte en un agujero negro.',
+      '¿Deberíamos invertir grandes cantidades de dinero en explorar Marte?',
+      'Explica: Por qué mirar las estrellas es, en cierta forma, mirar hacia el pasado.',
+      '¿Qué sería más importante descubrir: vida en Marte o vida inteligente fuera del sistema solar?',
+      'Explica: Qué es una supernova y por qué es importante para el universo.',
+      '¿Puede la humanidad convertirse algún día en una especie multiplanetaria?',
+      'Explica: Por qué Plutón dejó de ser considerado un planeta.',
+      'Si descubriéramos vida extraterrestre mañana, ¿cómo cambiaría nuestra sociedad?',
+      'Explica: ¿Por qué los seres humanos compartimos tanto ADN con otras especies?',
+      '¿La evolución humana continúa actualmente?',
+      'Explica: Cómo funciona la selección natural de manera sencilla.',
+      '¿Deberíamos poder modificar genéticamente a futuros seres humanos para evitar enfermedades?',
+      'Explica: Por qué los virus son tan difíciles de clasificar como seres vivos.',
+      '¿Qué sería más peligroso: perder a las abejas o perder a los grandes depredadores?',
+      'Explica: Cómo una pequeña mutación genética puede producir grandes cambios.',
+      '¿Podría la clonación humana llegar a ser aceptable?',
+      'Explica: Por qué la biodiversidad es esencial para los ecosistemas.',
+      '¿Hasta qué punto deberían los humanos intervenir en la evolución de otras especies?',
+      'Explica: ¿Por qué nuestro cerebro puede engañarnos?',
+      '¿Somos realmente racionales cuando tomamos decisiones?',
+      'Explica: Cómo funcionan las ilusiones ópticas.',
+      '¿Podría la ciencia explicar completamente la conciencia algún día?',
+      'Explica: Por qué los recuerdos pueden cambiar con el tiempo.',
+      '¿Es posible entrenar nuestra inteligencia?',
+      'Explica: Qué ocurre en el cerebro cuando aprendemos algo nuevo.',
+      '¿Tomamos decisiones antes de ser conscientes de haberlas tomado?',
+      'Explica: Por qué necesitamos dormir.',
+      '¿Sería positivo poder borrar voluntariamente recuerdos dolorosos?',
+      'Explica: ¿Por qué nada puede viajar más rápido que la luz?',
+      '¿Qué pasaría si la gravedad desapareciera durante cinco segundos?',
+      'Explica: La diferencia entre masa y peso.',
+      '¿Por qué el tiempo parece pasar más rápido cuando envejecemos?',
+      'Explica: Qué significa que la materia está formada principalmente por espacio vacío.',
+      '¿Es posible viajar en el tiempo según la física?',
+      'Explica: Por qué una pluma y un martillo caen a la misma velocidad en el vacío.',
+      '¿Qué sería más revolucionario: dominar la fusión nuclear o descubrir una nueva fuente de energía?',
+      'Explica: Por qué el hielo flota sobre el agua.',
+      'Si pudiéramos controlar la gravedad, ¿cómo cambiaría nuestra civilización?',
+      'Explica: ¿Por qué el agua es una sustancia tan extraordinaria?',
+      '¿Podría existir la vida sin carbono?',
+      'Explica: Por qué algunos elementos son radiactivos.',
+      '¿El plástico fue uno de los mejores inventos de la humanidad o uno de los peores?',
+      'Explica: Cómo funciona una reacción química.',
+      '¿Por qué algunos metales se oxidan y otros prácticamente no?',
+      'Explica: Qué hace que un diamante y el grafito sean tan diferentes si ambos contienen carbono.',
+      '¿Podremos crear materiales que se reparen solos?',
+      'Explica: Por qué mezclar determinadas sustancias puede producir explosiones.',
+      '¿Qué material del futuro podría cambiar nuestra vida cotidiana?',
+      'Explica: ¿Por qué ocurren los terremotos?',
+      '¿Podremos predecir algún día los terremotos con precisión?',
+      'Explica: Cómo se forman los volcanes.',
+      '¿Qué ocurriría si todos los glaciares del planeta desaparecieran?',
+      'Explica: Por qué existen las estaciones del año.',
+      '¿La humanidad podría sobrevivir a otra edad de hielo?',
+      'Explica: Cómo los árboles influyen en el clima.',
+      '¿Deberíamos intentar modificar artificialmente el clima para combatir el calentamiento global?',
+      'Explica: Por qué los océanos son fundamentales para la vida terrestre.',
+      '¿Cuál representa una amenaza mayor para nuestra civilización: el cambio climático, los asteroides o las pandemias?',
+      '¿Puede una inteligencia artificial llegar a realizar descubrimientos científicos que los humanos no comprendan?',
+      'Explica: Cómo la inteligencia artificial está cambiando la investigación científica.',
+      '¿Deberíamos permitir que una IA diseñe nuevos medicamentos?',
+      '¿Podrían los robots llegar a realizar mejores experimentos que los científicos humanos?',
+      'Explica: Qué significa que una máquina pueda aprender.',
+      '¿La inteligencia artificial acelerará una nueva revolución científica?',
+      '¿Podría una IA formular una teoría científica completamente nueva?',
+      '¿La ciencia avanzaría más rápido si compartiéramos todos los datos de investigación públicamente?',
+      'Explica: Cómo las simulaciones por computadora ayudan a estudiar fenómenos que no podemos experimentar directamente.',
+      '¿Cuál podría ser el mayor descubrimiento científico producido con ayuda de inteligencia artificial?',
+      'Explica: ¿Por qué las vacunas entrenan al sistema inmunitario?',
+      '¿Podrá la ciencia detener completamente el envejecimiento?',
+      'Explica: Por qué las bacterias pueden volverse resistentes a los antibióticos.',
+      '¿Vivir 150 años sería realmente algo positivo?',
+      'Explica: Cómo nuestro sistema inmunitario distingue lo propio de lo extraño.',
+      '¿Deberían cultivarse órganos humanos en laboratorios para trasplantes?',
+      'Explica: Por qué algunas enfermedades pueden desaparecer y otras regresan.',
+      '¿Podremos algún día reemplazar cualquier órgano del cuerpo?',
+      'Explica: Cómo el estilo de vida puede influir en la expresión de nuestros genes.',
+      '¿Cuál debería ser el gran objetivo de la medicina del futuro: vivir más o vivir mejor?',
+      '¿La ciencia puede responder todas las preguntas importantes de la humanidad?',
+      'Explica: La diferencia entre una teoría científica y una simple opinión.',
+      '¿Deberían existir límites éticos para determinados experimentos científicos?',
+      '¿Por qué las personas creen en pseudociencias incluso cuando existe evidencia en contra?',
+      'Explica: Por qué poder repetir un experimento es fundamental en la ciencia.',
+      '¿Un científico debería ser responsable de cómo se utiliza su descubrimiento?',
+      '¿Debería enseñarse más pensamiento científico que memorización de contenidos en las escuelas?',
+      '¿Puede una idea científica ser correcta aunque la mayoría de los científicos inicialmente la rechacen?',
+      'Explica: ¿Por qué cambiar de opinión ante nuevas evidencias es una fortaleza y no una debilidad?',
+      'Si pudieras conocer con certeza la respuesta a una sola pregunta científica, ¿qué preguntarías y por qué?'
+    ]),
+    ciencia_category_id,
+    'improvisado';
+    
+  RAISE NOTICE '100 temas de Ciencia insertados correctamente';
+END $$;
+
+-- Verificar que se insertaron correctamente
+SELECT 
+  c.name as categoria,
+  COUNT(t.id) as temas_count
+FROM categories c
+LEFT JOIN topics t ON t.category_id = c.id
+WHERE c.name = 'Ciencia'
+GROUP BY c.name;

@@ -1,0 +1,131 @@
+-- Insertar 100 temas de Filosofía de forma segura
+DO $$
+DECLARE
+  filosofia_category_id UUID;
+BEGIN
+  -- Obtener el ID de la categoría Filosofía
+  SELECT id INTO filosofia_category_id FROM categories WHERE name = 'Filosofía';
+  
+  IF filosofia_category_id IS NULL THEN
+    RAISE EXCEPTION 'La categoría Filosofía no existe. Ejecuta primero create_categories_only.sql';
+  END IF;
+  
+  -- Insertar los 100 temas de Filosofía
+  INSERT INTO topics (title, category_id, mode) 
+  SELECT 
+    unnest(ARRAY[
+      '¿Qué significa realmente vivir una buena vida?',
+      '¿Somos verdaderamente libres o nuestras decisiones están condicionadas por nuestra biología y entorno?',
+      'Explica: El mito de la caverna de Platón.',
+      '¿Es mejor conocer una verdad dolorosa o vivir feliz dentro de una mentira?',
+      '¿Puede existir el bien sin que exista el mal?',
+      'Explica: Qué significa "Conócete a ti mismo".',
+      '¿Una vida sin propósito puede seguir siendo una buena vida?',
+      '¿Somos responsables de aquello que hacemos bajo presión?',
+      'Explica: La diferencia entre moral y ética.',
+      '¿Puede una persona ser buena y hacer cosas malas?',
+      '¿Es correcto mentir para proteger a alguien?',
+      'Explica: El imperativo categórico de Kant de manera sencilla.',
+      '¿El fin justifica los medios?',
+      '¿Existe alguna acción que sea siempre moralmente incorrecta?',
+      'Explica: El dilema del tranvía.',
+      '¿Salvarías a cinco desconocidos sacrificando a una persona inocente?',
+      '¿Es peor hacer algo malo o permitir que algo malo ocurra?',
+      '¿Una buena intención puede justificar un mal resultado?',
+      '¿Tenemos más obligaciones con nuestra familia que con los desconocidos?',
+      '¿Ser egoísta es siempre algo malo?',
+      '¿Qué hace que una persona siga siendo la misma a lo largo de toda su vida?',
+      'Explica: La paradoja del barco de Teseo.',
+      'Si todos tus recuerdos fueran reemplazados, ¿seguirías siendo tú?',
+      '¿Somos nuestro cuerpo, nuestra mente o nuestros recuerdos?',
+      '¿Una copia perfecta de ti sería realmente tú?',
+      'Explica: El problema filosófico de la identidad personal.',
+      '¿Cambiar completamente de personalidad significa convertirse en otra persona?',
+      '¿Existe un "yo" permanente o estamos cambiando constantemente?',
+      '¿Qué parte de ti no podrías perder sin dejar de ser tú?',
+      'Si pudieras transferir tu mente a una computadora, ¿habrías sobrevivido?',
+      '¿Podemos estar completamente seguros de que el mundo exterior existe?',
+      'Explica: La frase de Descartes "Pienso, luego existo".',
+      '¿Cómo sabes que ahora mismo no estás soñando?',
+      '¿Puede existir conocimiento absolutamente seguro?',
+      'Explica: El problema del cerebro en una cubeta.',
+      '¿Nuestros sentidos nos muestran la realidad o solo una interpretación de ella?',
+      '¿Podría toda nuestra realidad ser una simulación?',
+      '¿Hay cosas que los seres humanos nunca podrán comprender?',
+      '¿Qué diferencia existe entre creer algo y saberlo?',
+      '¿Puede una opinión ser verdadera por casualidad sin convertirse en conocimiento?',
+      '¿Existe una verdad universal o toda verdad depende del punto de vista?',
+      '¿Dos personas pueden tener versiones diferentes y verdaderas de un mismo acontecimiento?',
+      'Explica: Qué significa el relativismo.',
+      '¿La verdad necesita ser demostrada para ser verdad?',
+      '¿Puede una sociedad entera estar equivocada?',
+      '¿Que muchas personas crean algo lo hace más verdadero?',
+      '¿Es posible ser completamente objetivo?',
+      '¿La ciencia descubre la realidad o construye modelos útiles de ella?',
+      '¿Hay verdades morales tan reales como las verdades matemáticas?',
+      '¿Preferimos muchas veces una historia convincente antes que la verdad?',
+      '¿Tiene la vida un significado objetivo?',
+      'Explica: La idea de Nietzsche de que "Dios ha muerto".',
+      '¿Podemos crear nuestro propio sentido de la vida?',
+      '¿Una vida eterna tendría menos sentido precisamente porque nunca terminaría?',
+      'Explica: El absurdo en la filosofía de Albert Camus.',
+      '¿Por qué seguimos buscando significado en un universo que podría no tenerlo?',
+      '¿La muerte es lo que da valor a la vida?',
+      '¿Sería deseable vivir para siempre?',
+      '¿Una vida corta pero extraordinaria es mejor que una larga y tranquila?',
+      '¿Necesitamos sentir que nuestra vida importa para ser felices?',
+      '¿Qué significa realmente ser feliz?',
+      '¿La felicidad debería ser el objetivo principal de la vida?',
+      'Explica: La idea estoica de controlar lo que depende de nosotros.',
+      '¿Es posible ser feliz sin sufrir nunca?',
+      '¿El placer y la felicidad son lo mismo?',
+      '¿Es mejor tener grandes ambiciones o aprender a desear menos?',
+      '¿Puede una persona ser feliz sin saber que lo es?',
+      '¿Necesitamos dificultades para valorar las cosas buenas?',
+      '¿La comparación con otras personas destruye nuestra felicidad?',
+      '¿Preferirías una vida feliz artificialmente o una vida real con sufrimiento?',
+      'Explica: La "máquina de experiencias" de Robert Nozick.',
+      'Si una máquina pudiera darte una felicidad perfecta para siempre, ¿entrarías en ella?',
+      '¿Es más importante ser feliz o vivir auténticamente?',
+      '¿Puede una ilusión ser valiosa aunque sepamos que es falsa?',
+      '¿Existe alguna diferencia entre felicidad real y felicidad producida artificialmente?',
+      '¿Preferirías recordar una vida maravillosa que nunca ocurrió?',
+      '¿Es mejor una experiencia real mediocre que una experiencia virtual perfecta?',
+      '¿La realidad tiene valor simplemente por ser real?',
+      '¿Una emoción causada por una simulación es menos auténtica?',
+      '¿Podríamos llegar a preferir mundos virtuales al mundo real?',
+      '¿Somos moralmente responsables si nuestro comportamiento está determinado por causas anteriores?',
+      'Explica: La diferencia entre determinismo y libre albedrío.',
+      '¿Podrías haber tomado realmente una decisión diferente de la que tomaste?',
+      '¿La libertad consiste en poder elegir o en poder controlar nuestros deseos?',
+      '¿Una adicción elimina completamente la responsabilidad moral?',
+      '¿Podemos elegir aquello que deseamos?',
+      'Si pudieras predecir perfectamente todas tus decisiones futuras, ¿seguirías siendo libre?',
+      '¿Puede existir responsabilidad sin libertad?',
+      '¿Somos autores de nuestra personalidad o simplemente la recibimos?',
+      '¿Cuánto de lo que somos decidimos realmente?',
+      '¿Una sociedad perfectamente justa sería también una sociedad libre?',
+      'Explica: El "velo de la ignorancia" de John Rawls.',
+      '¿Todas las personas deberían tener las mismas oportunidades aunque produzcan resultados diferentes?',
+      '¿Es justo quitarle más al que tiene más para ayudar al que tiene menos?',
+      '¿La libertad individual debe tener límites cuando perjudica a la sociedad?',
+      '¿Es mejor una sociedad muy libre pero desigual o una muy igualitaria con menos libertad?',
+      '¿Debemos obedecer una ley que consideramos injusta?',
+      '¿Puede existir una sociedad sin autoridad?',
+      'Si pudieras conocer la respuesta definitiva a una sola pregunta filosófica, ¿cuál elegirías?',
+      'Si supieras con certeza que nadie recordará tu existencia dentro de 100 años, ¿cambiaría la forma en que vives hoy?'
+    ]),
+    filosofia_category_id,
+    'improvisado';
+    
+  RAISE NOTICE '100 temas de Filosofía insertados correctamente';
+END $$;
+
+-- Verificar que se insertaron correctamente
+SELECT 
+  c.name as categoria,
+  COUNT(t.id) as temas_count
+FROM categories c
+LEFT JOIN topics t ON t.category_id = c.id
+WHERE c.name = 'Filosofía'
+GROUP BY c.name;

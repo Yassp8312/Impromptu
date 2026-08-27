@@ -1,183 +1,171 @@
-# Impromptu 🎤
+# Impromptu
 
-Una aplicación web para practicar y mejorar la oratoria a través de ejercicios de improvisación e investigación profunda.
+Aplicación web para practicar oratoria mediante ejercicios de improvisación e investigación profunda. El usuario recibe un tema al azar, organiza sus ideas y practica una exposición breve con un temporizador integrado.
 
-## 🚀 Características
+## Características
 
-- **Modo Improvisado**: Elige una categoría y deja que el azar te dé un tema para practicar tu oratoria por 1 minuto
-- **Investigación Profunda**: Tómate 15 minutos para investigar un tema y luego explícalo en 1 minuto
-- **Temporizador Integrado**: Timer de 1 minuto para controlar tus exposiciones
-- **Temas Dinámicos**: Los temas se cargan desde una base de datos de Supabase, facilitando la actualización constante
-- **Interfaz Moderna**: Diseño elegante con modo claro/oscuro
-- **Audio Feedback**: Efectos de sonido al girar el mazo de temas
+- Modo **Improvisado** con temas organizados por categorías.
+- Modo **Investigación profunda** para estudiar un tema y explicarlo después.
+- Mazo aleatorio con contador y animación de tarjetas.
+- Temporizador de un minuto para las exposiciones.
+- Selector de tema claro u oscuro.
+- Opciones para compartir la aplicación.
+- Temas y categorías administrados desde Supabase.
+- Diseño adaptable para computadoras y dispositivos móviles.
+- Metadatos SEO, Open Graph, Twitter Cards, `robots.txt` y `sitemap.xml`.
+- Vercel Analytics en producción.
 
-## 🛠️ Stack Tecnológico
+## Tecnologías
 
-- **Frontend**: Next.js 16, React 19, TypeScript
-- **UI**: Tailwind CSS, Base UI, Lucide Icons
-- **Backend**: Supabase (PostgreSQL)
-- **Cliente Supabase**: @supabase/supabase-js
-- **Analytics**: Vercel Analytics
+- [Next.js 16](https://nextjs.org/) con App Router
+- [React 19](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [Supabase](https://supabase.com/) para la base de datos
+- [Lucide](https://lucide.dev/) para iconos
+- [Vercel Analytics](https://vercel.com/analytics)
 
-## 📋 Requisitos Previos
+## Requisitos
 
-- Node.js (v18 o superior)
-- pnpm o npm
-- Cuenta de Supabase
+- Node.js 20 o una versión posterior compatible con Next.js 16.
+- npm o pnpm.
+- Un proyecto de Supabase.
 
-## 🏗️ Instalación
+## Instalación local
 
-1. **Clonar el repositorio**
+1. Clona el repositorio y entra en su carpeta:
+
    ```bash
-   git clone <tu-repositorio>
+   git clone <URL_DEL_REPOSITORIO>
    cd Impromptu
    ```
 
-2. **Instalar dependencias**
+2. Instala las dependencias:
+
    ```bash
-   pnpm install
-   # o
    npm install
    ```
 
-3. **Configurar variables de entorno**
-   
-   Copia el archivo `.env.example` a `.env.local`:
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Actualiza las variables con tus credenciales de Supabase:
+3. Crea `.env.local` a partir de `.env.example` y completa las variables:
+
    ```env
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
    NEXT_PUBLIC_SUPABASE_URL=https://tu-proyecto.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima
    ```
 
-4. **Configurar la base de datos en Supabase**
-   
-   Ejecuta el script SQL en tu dashboard de Supabase:
-   - Ve a tu proyecto en Supabase
-   - Navega a SQL Editor
-   - Copia y ejecuta el contenido de `supabase/setup.sql`
-   
-   Esto creará las tablas necesarias e insertará los datos iniciales.
+4. Prepara la base de datos ejecutando [`supabase/setup.sql`](supabase/setup.sql) en el SQL Editor de Supabase.
 
-5. **Ejecutar el servidor de desarrollo**
+5. Inicia el servidor de desarrollo:
+
    ```bash
-   pnpm dev
-   # o
    npm run dev
    ```
 
-6. **Abrir en el navegador**
-   
-   Navega a `http://localhost:3000`
+6. Abre [http://localhost:3000](http://localhost:3000).
 
-## 📚 Estructura del Proyecto
+## Variables de entorno
 
+| Variable | Obligatoria | Descripción |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Sí | URL pública del proyecto de Supabase. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Sí | Clave anónima pública de Supabase. No uses la `service_role`. |
+| `NEXT_PUBLIC_SITE_URL` | En producción | URL pública completa; por ejemplo, `https://impromptu.com`. |
+
+En Vercel, la aplicación puede detectar automáticamente la URL del despliegue. Para un dominio propio, configura siempre `NEXT_PUBLIC_SITE_URL` para que el canonical, Open Graph, `robots.txt` y `sitemap.xml` utilicen el dominio correcto.
+
+## Base de datos
+
+La aplicación utiliza dos tablas:
+
+### `categories`
+
+Guarda las categorías disponibles para el modo improvisado.
+
+| Campo | Tipo | Uso |
+| --- | --- | --- |
+| `id` | UUID | Identificador principal. |
+| `name` | VARCHAR | Nombre único de la categoría. |
+| `icon` | VARCHAR | Símbolo mostrado en el selector. |
+| `created_at` | TIMESTAMPTZ | Fecha de creación. |
+| `updated_at` | TIMESTAMPTZ | Fecha de actualización. |
+
+### `topics`
+
+Guarda las tarjetas de ambos modos.
+
+| Campo | Tipo | Uso |
+| --- | --- | --- |
+| `id` | UUID | Identificador principal. |
+| `title` | VARCHAR | Texto del tema. |
+| `category_id` | UUID | Categoría relacionada. |
+| `mode` | VARCHAR | `improvisado` o `profundo`. |
+| `created_at` | TIMESTAMPTZ | Fecha de creación. |
+| `updated_at` | TIMESTAMPTZ | Fecha de actualización. |
+
+Para agregar una tarjeta de investigación profunda:
+
+```sql
+INSERT INTO topics (title, category_id, mode)
+VALUES (
+  'El impacto de la inteligencia artificial en la educación',
+  (SELECT id FROM categories LIMIT 1),
+  'profundo'
+);
 ```
-Impromptu/
-├── app/                    # Páginas de Next.js
-│   ├── layout.tsx         # Layout principal
-│   ├── page.tsx            # Página de inicio
-│   └── globals.css        # Estilos globales
-├── components/             # Componentes React
-│   ├── impromptu-app.tsx  # Componente principal de la aplicación
-│   └── ui/                # Componentes UI reutilizables
-├── lib/                    # Utilidades y configuraciones
-│   ├── supabase.ts        # Cliente de Supabase
-│   └── utils.ts           # Funciones utilitarias
-├── supabase/              # Scripts de base de datos
-│   └── setup.sql          # Script de inicialización
-├── public/                # Archivos estáticos
-└── package.json           # Dependencias del proyecto
+
+> [!IMPORTANT]
+> El script inicial incluye políticas públicas de escritura para facilitar la configuración. Antes de publicar una aplicación con administración desde el cliente, restringe las políticas de `INSERT`, `UPDATE` y `DELETE` y conserva únicamente los permisos que realmente necesites.
+
+## Comandos disponibles
+
+| Comando | Acción |
+| --- | --- |
+| `npm run dev` | Inicia Next.js en desarrollo usando Webpack. |
+| `npm run build` | Genera la compilación de producción. |
+| `npm run start` | Sirve una compilación de producción existente. |
+
+Si el binario nativo de SWC no está disponible en Windows, puedes compilar explícitamente con Webpack:
+
+```bash
+npx next build --webpack
 ```
 
-## 🗄️ Esquema de Base de Datos
+## Estructura principal
 
-### Tabla `categories`
-Almacena las categorías de temas para el modo improvisado.
+```text
+app/
+  favicon.ico        Icono del sitio
+  layout.tsx         Metadatos y layout global
+  page.tsx           Página principal
+  robots.ts          Reglas para buscadores
+  sitemap.ts         Mapa del sitio
+components/
+  impromptu-app.tsx  Interfaz y lógica principal
+lib/
+  site-url.ts        Resolución de la URL pública
+  supabase.ts        Cliente y tipos de Supabase
+public/
+  og-image.png       Imagen para compartir en redes
+supabase/
+  setup.sql          Esquema y datos iniciales
+```
 
-- `id` (UUID): Identificador único
-- `name` (VARCHAR): Nombre de la categoría
-- `icon` (VARCHAR): Icono representativo
-- `created_at`, `updated_at` (TIMESTAMP): Fechas de registro
+## Despliegue en Vercel
 
-### Tabla `topics`
-Almacena los temas individuales para ambos modos de práctica.
+1. Importa el repositorio en Vercel.
+2. Añade las variables de entorno de Supabase.
+3. Añade `NEXT_PUBLIC_SITE_URL` si utilizarás un dominio propio.
+4. Despliega el proyecto.
+5. Comprueba estas rutas en producción:
 
-- `id` (UUID): Identificador único
-- `title` (VARCHAR): Título del tema
-- `category_id` (UUID): Referencia a la categoría (solo para modo improvisado)
-- `mode` (VARCHAR): 'improvisado' o 'profundo'
-- `created_at`, `updated_at` (TIMESTAMP): Fechas de registro
+   - `/robots.txt`
+   - `/sitemap.xml`
+   - `/favicon.ico`
+   - `/og-image.png`
 
-## 🎯 Cómo Usar
+Después de conectar un dominio propio, solicita la indexación de la página desde [Google Search Console](https://search.google.com/search-console/about).
 
-### Modo Improvisado
-1. Selecciona una categoría (Oratoria, Economía, Cultura, De todo)
-2. Haz clic en "Girar el mazo" para obtener un tema aleatorio
-3. Tómate 30 segundos para pensar
-4. Expón el tema en 1 minuto usando el temporizador
+## Créditos
 
-### Modo Investigación Profunda
-1. Selecciona el modo "Investigación profunda"
-2. Haz clic en "Girar el mazo" para obtener un tema complejo
-3. Tómate 15 minutos para investigar el tema
-4. Expón lo aprendido en 1 minuto
-
-### Agregar Nuevos Temas
-
-Para agregar nuevos temas a la base de datos:
-
-1. Ve al dashboard de Supabase
-2. Navega a Table Editor
-3. Agrega nuevas categorías en la tabla `categories`
-4. Agrega nuevos temas en la tabla `topics`
-5. Los cambios se reflejarán automáticamente en la aplicación
-
-## 🎨 Personalización
-
-### Modificar Temas Iniciales
-Edita el archivo `supabase/setup.sql` para agregar o modificar los temas iniciales antes de ejecutar el script.
-
-### Estilos
-Los estilos principales se encuentran en `app/globals.css` y usan Tailwind CSS.
-
-## 🚀 Despliegue
-
-### Vercel
-1. Conecta tu repositorio a Vercel
-2. Configura las variables de entorno en Vercel
-3. Despliega automáticamente
-
-### Otros Proveedores
-Asegúrate de configurar las variables de entorno `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en tu plataforma de hosting.
-
-## 🤝 Contribución
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT.
-
-## 👨‍💻 Autor
-
-**Desarrollado por J.C/Yassper**
-Idea original de Francisco Annoni
-
-## 🙏 Agradecimientos
-
-- A Francisco Annoni por la idea original del proyecto
-- A la comunidad de open source por las herramientas utilizadas
-
----
-
-**© 2026 Impromptu. Todos los derechos reservados.**
+Creado por **J.C/Yassper**. Idea original de **Francisco Annoni**.
